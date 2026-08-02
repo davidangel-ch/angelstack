@@ -1,0 +1,9 @@
+# Shell scripts must keep LF or they break under bash on Linux/macOS
+*.sh text eol=lf
+install.sh text eol=lf
+
+# Everything else: normalize in the repo, let checkout decide locally
+* text=auto
+*.md text
+*.json text
+*.yml text
