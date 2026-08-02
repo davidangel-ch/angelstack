@@ -7,3 +7,7 @@ install.sh text eol=lf
 *.md text
 *.json text
 *.yml text
+
+# Ignore PowerShell/Shell scripts
+*.ps1 linguist-detectable=false
+*.sh linguist-detectable=false
