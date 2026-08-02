@@ -1,0 +1,77 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every skill has valid frontmatter
+        run: |
+          fail=0
+          for f in skills/*/SKILL.md; do
+            [ -e "$f" ] || { echo "no skills found"; exit 1; }
+            head -1 "$f" | grep -q '^---$' || { echo "$f: missing frontmatter opener"; fail=1; }
+            grep -q '^name: ' "$f"        || { echo "$f: missing 'name'"; fail=1; }
+            grep -q '^description: ' "$f" || { echo "$f: missing 'description'"; fail=1; }
+
+            dir=$(basename "$(dirname "$f")")
+            name=$(grep -m1 '^name: ' "$f" | sed 's/^name: //')
+            [ "$dir" = "$name" ] || { echo "$f: name '$name' != directory '$dir'"; fail=1; }
+          done
+          exit $fail
+
+      - name: Commands have frontmatter and a description
+        run: |
+          fail=0
+          for f in commands/*.md; do
+            head -1 "$f" | grep -q '^---$'   || { echo "$f: missing frontmatter opener"; fail=1; }
+            grep -q '^description: ' "$f"    || { echo "$f: missing 'description'"; fail=1; }
+          done
+          exit $fail
+
+      - name: README lists every shipped guard
+        run: |
+          fail=0
+          for d in skills/*/; do
+            name=$(basename "$d")
+            grep -q "$name" README.md || { echo "README.md does not mention skill '$name'"; fail=1; }
+          done
+          exit $fail
+
+      - name: Installer is executable and parses
+        run: |
+          test -x install.sh || { echo "install.sh is not executable"; exit 1; }
+          bash -n install.sh
+
+      - name: plugin.json is valid JSON and version matches CHANGELOG
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+          v=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          grep -q "^## $v" CHANGELOG.md || { echo "CHANGELOG.md has no entry for version $v"; exit 1; }
+
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer copies everything into a clean home
+        run: |
+          export CLAUDE_HOME="$RUNNER_TEMP/claude"
+          ./install.sh
+          for s in timezone-safety money-math tenant-isolation migration-safety; do
+            test -f "$CLAUDE_HOME/skills/$s/SKILL.md" || { echo "missing skill: $s"; exit 1; }
+          done
+          for c in guard timecheck; do
+            test -f "$CLAUDE_HOME/commands/$c.md" || { echo "missing command: $c"; exit 1; }
+          done
+
+      - name: Re-running the installer is safe
+        run: |
+          export CLAUDE_HOME="$RUNNER_TEMP/claude"
+          ./install.sh | grep -q "skip" || { echo "second run should skip existing files"; exit 1; }

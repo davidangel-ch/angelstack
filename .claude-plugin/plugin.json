@@ -1,0 +1,21 @@
+{
+  "name": "angelstack",
+  "version": "0.1.0",
+  "description": "Guardrails that stop AI-written code from shipping production bugs. Four guards — timezone safety, money math, tenant isolation, migration safety — each from a bug that actually shipped.",
+  "author": {
+    "name": "David Angel",
+    "url": "https://davidangel.dev"
+  },
+  "homepage": "https://github.com/davidangel-ch/angelstack",
+  "repository": "https://github.com/davidangel-ch/angelstack",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "agent-skills",
+    "code-review",
+    "guardrails",
+    "multi-tenant",
+    "timezone",
+    "migrations"
+  ]
+}
