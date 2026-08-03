@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Good</title>
+<style>
+  *:focus-visible { outline: 2px solid #b4531f; }
+  *:focus { outline: 2px solid #b4531f; }
+  @keyframes pulse { from {transform:scale(1)} to {transform:scale(1.03)} }
+  .pulse { animation: pulse 1s infinite; }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+</style></head><body>
+  <button id="icon" aria-label="Refresh"><svg width="16" height="16" aria-hidden="true"></svg></button>
+  <button id="save">Save</button>
+  <label for="q">Search</label><input id="q" type="text">
+  <p class="pulse">urgent</p>
+</body></html>

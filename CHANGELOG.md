@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 - 2026-08-02
+
+**New - `packs/design/a11y-public-sector`**
+
+Section 508 / WCAG 2.1 AA for software sold to schools, districts and government,
+where accessibility is contractual rather than aspirational. Ships a Playwright +
+axe-core template covering the four things automation is genuinely good at: a rule
+scan, a keyboard sweep (focus visibility and accessible names), reduced-motion, and
+a motion cap verified through computed style rather than the stylesheet.
+
+Includes the `scrollbar-color` trap: it is inherited and disables every
+`::-webkit-scrollbar` rule in Blink, so a custom scrollbar silently reverts to
+default width while still looking tinted. Verify by measuring, never by reading CSS.
+
+Verified in both directions against shipped fixtures - `bad.html` fails all three
+applicable tests, `good.html` passes all three. The README documents the limitation
+those fixtures exposed: a `<div onclick>` styled as a button is caught by neither
+axe nor the tab sweep, because it is not focusable and not a rule violation. The
+most dangerous failure is the one automation cannot see.
+
 ## 0.2.0 - 2026-08-02
 
 Restructured into packs, and every guard now ships a runnable check.

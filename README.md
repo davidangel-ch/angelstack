@@ -57,6 +57,7 @@ Windows: `.\install.ps1`. Both copy the skills and commands into `~/.claude/`, p
 |---|---|---|
 | **design-tokens** | Classes referencing tokens that don't exist; dark-mode overrides covering only some tokens | In Tailwind v4 an undefined token emits **no CSS**. A warning cell with no fill, a delete button with no hover. Nothing failed; the pixels were just wrong. |
 | **native-controls** | `window.confirm`/`alert`/`prompt`, raw `<select>`, and value-vs-action control confusion | Native dialogs block the thread, can't be styled or tested, and are suppressed outright in some embedded contexts — so a confirm you believe guards a destructive action may never appear. |
+| **a11y-public-sector** | Keyboard traps, unreachable custom widgets, unnamed controls, unannounced async results, uncappable motion | A product shipped a keyboard-shortcut legend for shortcuts that were never wired, over custom dropdowns a keyboard user couldn't reach at all. Section 508 / WCAG 2.1 AA is contractual when schools and government are the buyers. |
 
 ## Runnable checks, not just prompts
 

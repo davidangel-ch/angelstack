@@ -1,7 +1,7 @@
 {
   "name": "angelstack",
-  "version": "0.2.0",
-  "description": "Guards at every handoff for engineers who own the whole product. Build-stage guards (timezone, money, tenancy, migrations, guard integrity) and design guards (design tokens, native controls), each from a bug that actually shipped.",
+  "version": "0.3.0",
+  "description": "Guards at every handoff for engineers who own the whole product. Build guards (timezone, money, tenancy, migrations, guard integrity) and design guards (design tokens, native controls, accessibility), each from a bug that actually shipped.",
   "author": {
     "name": "David Angel",
     "url": "https://davidangel.dev"
