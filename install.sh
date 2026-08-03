@@ -6,7 +6,11 @@ set -euo pipefail
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${CLAUDE_HOME:-$HOME/.claude}"
 
-SKILLS=(timezone-safety money-math tenant-isolation migration-safety)
+# Every packs/<pack>/<skill>/ directory containing a SKILL.md.
+SKILLS=()
+for d in "$SRC"/packs/*/*/; do
+  [ -f "$d/SKILL.md" ] && SKILLS+=("$(basename "$d")")
+done
 COMMANDS=(guard timecheck)
 
 echo "angelstack → $DEST"
@@ -18,7 +22,7 @@ for s in "${SKILLS[@]}"; do
   if [ -e "$DEST/skills/$s" ]; then
     echo "  skip  skills/$s (already exists — remove it first to reinstall)"
   else
-    cp -R "$SRC/skills/$s" "$DEST/skills/$s"
+    cp -R "$(dirname "$(find "$SRC/packs" -type d -name "$s" -print -quit)")/$s" "$DEST/skills/$s"
     echo "  add   skills/$s"
   fi
 done

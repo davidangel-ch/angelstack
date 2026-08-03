@@ -7,7 +7,9 @@ $ErrorActionPreference = 'Stop'
 $src = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $dest = if ($env:CLAUDE_HOME) { $env:CLAUDE_HOME } else { Join-Path $HOME '.claude' }
 
-$skills = @('timezone-safety', 'money-math', 'tenant-isolation', 'migration-safety')
+$skillDirs = Get-ChildItem (Join-Path $src 'packs') -Directory -Recurse -Depth 1 |
+  Where-Object { Test-Path (Join-Path $_.FullName 'SKILL.md') }
+$skills = $skillDirs | ForEach-Object { $_.Name }
 $commands = @('guard', 'timecheck')
 
 Write-Host "angelstack -> $dest"
@@ -19,7 +21,7 @@ New-Item -ItemType Directory -Force -Path (Join-Path $dest 'commands') | Out-Nul
 foreach ($s in $skills) {
 $target = Join-Path $dest "skills\$s"
 if (Test-Path $target) { Write-Host "  skip  skills/$s (already exists - remove it first to reinstall)"; continue }
-Copy-Item -Recurse (Join-Path $src "skills\$s") $target
+Copy-Item -Recurse ($skillDirs | Where-Object { $_.Name -eq $s } | Select-Object -First 1).FullName $target
 Write-Host "  add   skills/$s"
 }
 
